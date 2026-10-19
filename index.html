@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#c2571a">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>استبانة التقييم والرضا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#fbf5ec; --surface:#ffffff; --text:#2a1f16; --muted:#7b6a58; --line:#eadfce;
+  --accent:#c2571a; --accent2:#e8a13a; --accent-text:#ffffff; --accent-soft:#fbe9d8;
+  --bad:#d6453d; --bad-soft:#fde8e6; --mid:#8a8f98; --mid-soft:#eef0f2; --good:#1f9254; --good-soft:#dff4e8;
+  --hero1:#c2571a; --hero2:#e8a13a; --err:#b3261e; --shadow:0 6px 18px rgba(80,50,20,.08);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#17120e; --surface:#231c16; --text:#f4ece1; --muted:#b8a794; --line:#3b3128;
+    --accent:#ee9355; --accent2:#f0b43a; --accent-text:#1a130d; --accent-soft:#3a2a1d;
+    --bad:#ff7a70; --bad-soft:#3d1f1d; --mid:#b4bac4; --mid-soft:#2f3034; --good:#5fd08e; --good-soft:#18331f;
+    --hero1:#7a3410; --hero2:#a8701a; --err:#ff8a80; --shadow:none; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#17120e; --surface:#231c16; --text:#f4ece1; --muted:#b8a794; --line:#3b3128;
+  --accent:#ee9355; --accent2:#f0b43a; --accent-text:#1a130d; --accent-soft:#3a2a1d;
+  --bad:#ff7a70; --bad-soft:#3d1f1d; --mid:#b4bac4; --mid-soft:#2f3034; --good:#5fd08e; --good-soft:#18331f;
+  --hero1:#7a3410; --hero2:#a8701a; --err:#ff8a80; --shadow:none; color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Tajawal","Segoe UI",Tahoma,Arial,sans-serif;line-height:1.7;font-size:16px}
+.wrap{max-width:660px;margin:0 auto;padding:14px 14px 56px}
+
+.hero{background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;border-radius:22px;padding:22px 20px;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.hero::after{content:"";position:absolute;left:-34px;bottom:-46px;width:160px;height:160px;border-radius:50%;border:28px solid rgba(255,255,255,.09)}
+.hero h1{margin:0 0 4px;font-size:24px;font-weight:800}
+.hero p{margin:0;opacity:.95;font-size:14.5px}
+
+.steps{display:flex;align-items:center;gap:10px;margin:0 2px 14px}
+.step{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted);font-weight:500}
+.step i{font-style:normal;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--line);color:var(--muted);font-weight:700;font-size:13px}
+.step.on{color:var(--text);font-weight:700}
+.step.on i{background:var(--accent);color:var(--accent-text)}
+.step.done i{background:var(--good);color:#fff}
+.bar{flex:1;height:4px;border-radius:9px;background:var(--line)}
+.bar.on{background:var(--accent)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:var(--shadow);animation:rise .35s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card h2{font-size:18px;margin:0 0 2px;font-weight:800}
+.card .hint{color:var(--muted);font-size:13.5px;margin:0 0 14px}
+.badge{display:inline-block;background:var(--accent-soft);color:var(--accent);border-radius:99px;padding:2px 12px;font-size:12.5px;font-weight:700;margin-bottom:8px}
+
+/* بطاقات الاختيار الكبيرة */
+.tiles{display:grid;gap:10px}
+.tiles.c2{grid-template-columns:1fr 1fr}
+.tiles.c3{grid-template-columns:repeat(3,1fr)}
+.tile{position:relative;border:2px solid var(--line);background:var(--surface);color:var(--text);border-radius:18px;padding:16px 6px 12px;font:inherit;cursor:pointer;text-align:center;transition:transform .12s,border-color .12s,background .12s;-webkit-tap-highlight-color:transparent}
+.tile:active{transform:scale(.97)}
+.tile .ic{display:block;color:var(--muted);transition:.15s}.tile .ic svg{width:46px;height:46px;display:block;margin:0 auto}
+.tile .tt{display:block;font-weight:800;font-size:16px;margin-top:4px}
+.tile .ds{display:block;font-size:12px;color:var(--muted);margin-top:1px}
+.tile[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);transform:scale(1.02)}
+.tile[aria-pressed="true"] .ic{color:var(--accent)}
+.tile[aria-pressed="true"]::after{content:"✓";position:absolute;top:6px;left:8px;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-text);font-size:13px;font-weight:800;display:grid;place-items:center}
+.tile.bad[aria-pressed="true"]{border-color:var(--bad);background:var(--bad-soft)}
+.tile.bad[aria-pressed="true"]::after{background:var(--bad);color:#fff}
+.tile.mid[aria-pressed="true"]{border-color:var(--mid);background:var(--mid-soft)}
+.tile.mid[aria-pressed="true"]::after{background:var(--mid);color:#fff}
+.tile.good[aria-pressed="true"]{border-color:var(--good);background:var(--good-soft)}
+.tile.good[aria-pressed="true"]::after{background:var(--good);color:#fff}
+.tile.bad[aria-pressed="true"] .tt{color:var(--bad)}
+.tile.mid[aria-pressed="true"] .tt{color:var(--mid)}
+.tile.good[aria-pressed="true"] .tt{color:var(--good)}
+.tile.big .ic svg{width:58px;height:58px}
+.tile.bad[aria-pressed="true"] .ic{color:var(--bad)}.tile.mid[aria-pressed="true"] .ic{color:var(--mid)}.tile.good[aria-pressed="true"] .ic{color:var(--good)}
+.tile.meal{padding:12px 8px 12px}.tile.meal .ic svg{width:100%;max-width:170px;height:auto;filter:saturate(.3);opacity:.8}.tile.meal[aria-pressed="true"] .ic svg{filter:none;opacity:1}
+.verdict{margin-top:12px;border-radius:14px;padding:10px 14px;font-weight:700;text-align:center;font-size:15px;background:var(--bg);color:var(--muted);border:1.5px dashed var(--line);transition:.2s}
+.verdict.bad{background:var(--bad-soft);color:var(--bad);border:1.5px solid var(--bad)}
+.verdict.mid{background:var(--mid-soft);color:var(--text);border:1.5px solid var(--mid)}
+.verdict.good{background:var(--good-soft);color:var(--good);border:1.5px solid var(--good)}
+
+/* الأصناف */
+.gt{display:flex;align-items:center;gap:8px;font-size:15.5px;font-weight:800;color:var(--accent);margin:20px 0 6px}
+.gt:first-child{margin-top:4px}
+.gt::after{content:"";flex:1;height:1px;background:var(--line)}
+.item{border:1.5px solid var(--line);border-radius:16px;padding:12px;margin-top:10px;transition:.15s}
+.item.rated{border-color:var(--accent);background:linear-gradient(0deg,transparent,var(--accent-soft))}
+.item .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.item .nm{font-weight:800;font-size:16.5px}
+.item .st{font-size:12.5px;color:var(--muted)}
+.lbl{font-size:12.5px;color:var(--muted);margin:8px 2px 5px;font-weight:700}
+.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.mini button{border:2px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;padding:8px 2px;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;line-height:1.3;-webkit-tap-highlight-color:transparent;transition:.12s}
+.mini button:active{transform:scale(.96)}
+.mini button .e{display:block;color:var(--muted)}.mini button .e svg{width:26px;height:26px;display:block;margin:0 auto 3px}
+.mini button.bad[aria-pressed="true"] .e{color:var(--bad)}.mini button.mid[aria-pressed="true"] .e{color:var(--mid)}.mini button.good[aria-pressed="true"] .e{color:var(--good)}.mini.size button[aria-pressed="true"] .e{color:var(--accent)}
+.mini button.bad[aria-pressed="true"]{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+.mini button.mid[aria-pressed="true"]{border-color:var(--mid);background:var(--mid-soft)}
+.mini button.good[aria-pressed="true"]{border-color:var(--good);background:var(--good-soft);color:var(--good)}
+.mini.size button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.mini.size button{padding:9px 2px}
+
+textarea{width:100%;min-height:110px;border:2px solid var(--line);border-radius:14px;background:var(--surface);color:var(--text);font:inherit;padding:12px;resize:vertical}
+textarea:focus,button:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
+.actions{display:flex;gap:10px;margin-top:6px}
+.btn{flex:1;border:0;border-radius:16px;padding:15px;font:inherit;font-weight:800;font-size:17px;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--accent-text);text-align:center;text-decoration:none;box-shadow:var(--shadow)}
+.btn.ghost{background:var(--surface);color:var(--text);border:2px solid var(--line);flex:0 0 auto;padding:15px 22px;box-shadow:none}
+.btn.wa{background:#1fa855;color:#fff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.err{color:var(--err);font-weight:700;font-size:14.5px;min-height:24px;margin:4px 2px}
+
+.done{text-align:center;padding:26px 14px}
+.done .big{width:72px;height:72px;margin:0 auto;color:var(--good);animation:pop .5s ease both}.done .big svg{width:100%;height:100%}
+@keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+.done h2{margin:6px 0;font-size:22px}
+.sum{white-space:pre-wrap;text-align:right;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px;font-size:13.5px;max-height:280px;overflow:auto;margin:12px 0}
+
+.tabs{display:none;gap:8px;margin-bottom:12px}
+.tabs.show{display:flex}
+.tabs button{flex:1;border:2px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;padding:9px;font:inherit;font-weight:700;cursor:pointer}
+.tabs button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+
+/* النتائج */
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.kpi div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 6px;text-align:center;font-size:13px;color:var(--muted)}
+.kpi b{display:block;font-size:24px;color:var(--accent)}
+.dist{margin:12px 0}
+.dist .h{display:flex;justify-content:space-between;font-weight:700;font-size:14.5px;margin-bottom:4px}
+.dist .h span{color:var(--muted);font-weight:500;font-size:12.5px}
+.stack{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--line)}
+.stack i{display:block;height:100%}
+.stack .b{background:var(--bad)}.stack .m{background:var(--mid)}.stack .g{background:var(--good)}
+.leg{display:flex;gap:12px;font-size:12px;color:var(--muted);margin-top:3px}
+.notes-list{margin:0;padding:0;list-style:none}
+.notes-list li{border-top:1px solid var(--line);padding:8px 0;font-size:14px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tabs" id="tabs">
+    <button id="tabSurvey" aria-pressed="true">الاستبانة</button>
+    <button id="tabResults" aria-pressed="false">النتائج</button>
+  </div>
+
+  <div id="surveyView">
+    <div class="hero">
+      <h1>رأيك يهمنا</h1>
+      <p>دقيقتان فقط، وإجاباتك تصنع وجباتنا القادمة.</p>
+    </div>
+
+    <div class="steps" id="steps">
+      <div class="step on" id="s1"><i>١</i>الوجبة القادمة</div>
+      <div class="bar" id="bar"></div>
+      <div class="step" id="s2"><i>٢</i>الوجبة السابقة</div>
+    </div>
+
+    <!-- الصفحة الأولى -->
+    <section id="page1">
+      <div class="card">
+        <span class="badge">مقترح الوجبة القادمة</span>
+        <h2>كبسة دجاج</h2>
+        <p class="hint">أي حجم تفضّله؟</p>
+        <div class="tiles c2" id="mealTiles"></div>
+      </div>
+      <div class="card">
+        <h2>إلى أي حد تحتاج هذه الوجبة؟</h2>
+        <p class="hint">اختر الأقرب لحالتك</p>
+        <div class="tiles c3" id="needTiles"></div>
+        <div class="verdict" id="needVerdict">لم تختر بعد</div>
+      </div>
+      <div class="err" id="err1" role="alert"></div>
+      <div class="actions"><button class="btn" id="next">التالي ←</button></div>
+    </section>
+
+    <!-- الصفحة الثانية -->
+    <section id="page2" hidden>
+      <div class="card">
+        <span class="badge">الانطباع العام</span>
+        <h2>كيف كانت الوجبة السابقة بشكل عام؟</h2>
+        <p class="hint">اختر وجهًا واحدًا يعبّر عن رضاك</p>
+        <div class="tiles c3" id="overallTiles"></div>
+        <div class="verdict" id="overallVerdict">لم تختر بعد</div>
+      </div>
+
+      <div class="card">
+        <span class="badge">تفصيل الأصناف</span>
+        <h2>قيّم ما تناولته فقط</h2>
+        <p class="hint">لكل صنف: الجودة ثم الحجم. تجاوز ما لم تجرّبه. <b id="cnt">لم تقيّم أي صنف بعد</b></p>
+        <div id="itemsHost"></div>
+      </div>
+
+      <div class="card">
+        <h2>ملاحظات أخرى</h2>
+        <p class="hint">أي اقتراح أو شكوى أو فكرة</p>
+        <textarea id="notes" maxlength="1000" placeholder="اكتب هنا..."></textarea>
+      </div>
+
+      <div class="err" id="err2" role="alert"></div>
+      <div class="actions">
+        <button class="btn ghost" id="back">→ رجوع</button>
+        <button class="btn" id="submit">إرسال</button>
+      </div>
+    </section>
+
+    <section id="doneView" hidden>
+      <div class="card done">
+        <div class="big"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="18"/><path d="M15 25 l6 6 12-13"/></svg></div>
+        <h2>شكرًا لك!</h2>
+        <p class="hint" id="doneMsg">خطوة أخيرة: اضغط «إرسال عبر واتساب» ثم اضغط إرسال داخل واتساب لتصلنا إجاباتك.</p>
+        <div class="sum" id="summary"></div>
+        <div class="actions">
+          <button class="btn ghost" id="copyBtn">نسخ</button>
+          <a class="btn wa" id="waBtn" target="_blank" rel="noopener">إرسال عبر واتساب</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="resultsView" hidden>
+    <h1>نتائج الاستبانة</h1>
+    <p class="hint" id="resSub">جارٍ التحميل...</p>
+    <div id="resBody"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var WA_NUMBER = "966500060860";
+  var MEALS = [
+    {v:"نصف دجاجة", c:"meal", d:"نصف الدجاجة", i:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 124"><defs><radialGradient id="bfhalf" cx=".4" cy=".3" r=".9"><stop offset="0" stop-color="#f5efe5"/><stop offset="1" stop-color="#ddd0b9"/></radialGradient><radialGradient id="bchalf" cx=".4" cy=".3" r=".95"><stop offset="0" stop-color="#f2b866"/><stop offset=".5" stop-color="#cf7329"/><stop offset="1" stop-color="#8d4010"/></radialGradient><radialGradient id="hfhalf"><stop offset="0" stop-color="#fff" stop-opacity=".0"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><radialGradient id="hchalf"><stop offset="0" stop-color="#ffe2a8" stop-opacity=".75"/><stop offset="1" stop-color="#ffe2a8" stop-opacity="0"/></radialGradient><clipPath id="chalf"><rect x="0" y="0" width="60" height="124"/></clipPath></defs><ellipse cx="60" cy="116" rx="40" ry="4" fill="#000" opacity=".08"/><g fill="url(#bfhalf)" stroke="#c8b99f" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">  <g><path d="M33 36 C21 40 16 56 22 70 C27 66 34 62 39 52 C42 45 39 38 33 36 Z"/></g><g transform="translate(120 0) scale(-1 1)"><g><path d="M33 36 C21 40 16 56 22 70 C27 66 34 62 39 52 C42 45 39 38 33 36 Z"/></g></g><g><path d="M30 88 C25 96 25 102 27 107 L34 106 C36 101 41 95 44 88 Z"/>      <ellipse cx="37" cy="83" rx="14" ry="10.5" transform="rotate(-22 37 83)"/>      <path d="M27 107 L25 112" fill="none" stroke-width="4.4"/>      <circle cx="23.6" cy="113.4" r="2.9"/><circle cx="28.6" cy="113.4" r="2.9"/></g><g transform="translate(120 0) scale(-1 1)"><g><path d="M30 88 C25 96 25 102 27 107 L34 106 C36 101 41 95 44 88 Z"/>      <ellipse cx="37" cy="83" rx="14" ry="10.5" transform="rotate(-22 37 83)"/>      <path d="M27 107 L25 112" fill="none" stroke-width="4.4"/>      <circle cx="23.6" cy="113.4" r="2.9"/><circle cx="28.6" cy="113.4" r="2.9"/></g></g>  <ellipse cx="60" cy="57" rx="29" ry="38"/></g><g fill="none" stroke="#c8b99f" stroke-width="0.84" stroke-linecap="round" opacity=".55">  <path d="M60 22 C57 40 57 70 60 90"/><path d="M60 22 C63 40 63 70 60 90"/></g><g fill="url(#hfhalf)" opacity=".9"><ellipse cx="47" cy="40" rx="9" ry="16" transform="rotate(14 47 40)"/></g><g fill="#c8b99f" opacity=".28"><circle cx="45" cy="62" r="1.5"/><circle cx="52" cy="72" r="1.4"/><circle cx="42" cy="52" r="1.3"/><circle cx="75" cy="60" r="1.5"/><circle cx="69" cy="72" r="1.4"/><circle cx="78" cy="50" r="1.3"/><circle cx="50" cy="82" r="1.3"/><circle cx="70" cy="82" r="1.3"/></g><g clip-path="url(#chalf)"><g fill="url(#bchalf)" stroke="#6e2f0c" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">  <g><path d="M33 36 C21 40 16 56 22 70 C27 66 34 62 39 52 C42 45 39 38 33 36 Z"/></g><g transform="translate(120 0) scale(-1 1)"><g><path d="M33 36 C21 40 16 56 22 70 C27 66 34 62 39 52 C42 45 39 38 33 36 Z"/></g></g><g><path d="M30 88 C25 96 25 102 27 107 L34 106 C36 101 41 95 44 88 Z"/>      <ellipse cx="37" cy="83" rx="14" ry="10.5" transform="rotate(-22 37 83)"/>      <path d="M27 107 L25 112" fill="none" stroke-width="4.4"/>      <circle cx="23.6" cy="113.4" r="2.9"/><circle cx="28.6" cy="113.4" r="2.9"/></g><g transform="translate(120 0) scale(-1 1)"><g><path d="M30 88 C25 96 25 102 27 107 L34 106 C36 101 41 95 44 88 Z"/>      <ellipse cx="37" cy="83" rx="14" ry="10.5" transform="rotate(-22 37 83)"/>      <path d="M27 107 L25 112" fill="none" stroke-width="4.4"/>      <circle cx="23.6" cy="113.4" r="2.9"/><circle cx="28.6" cy="113.4" r="2.9"/></g></g>  <ellipse cx="60" cy="57" rx="29" ry="38"/></g><g fill="none" stroke="#6e2f0c" stroke-width="1.0499999999999998" stroke-linecap="round" opacity=".55">  <path d="M60 22 C57 40 57 70 60 90"/><path d="M60 22 C63 40 63 70 60 90"/></g><g fill="url(#hchalf)" opacity=".9"><ellipse cx="47" cy="40" rx="9" ry="16" transform="rotate(14 47 40)"/></g><g fill="#6e2f0c" opacity=".28"><circle cx="45" cy="62" r="1.5"/><circle cx="52" cy="72" r="1.4"/><circle cx="42" cy="52" r="1.3"/><circle cx="75" cy="60" r="1.5"/><circle cx="69" cy="72" r="1.4"/><circle cx="78" cy="50" r="1.3"/><circle cx="50" cy="82" r="1.3"/><circle cx="70" cy="82" r="1.3"/></g></g><g stroke="#6e2f0c" stroke-width="1" stroke-dasharray="3 3" fill="none" opacity=".75"><line x1="60" y1="6" x2="60" y2="119"/></g></svg>`},
+    {v:"ربع دجاجة", c:"meal", d:"ربع الدجاجة", i:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 124"><defs><radialGradient id="bfquarter" cx=".4" cy=".3" r=".9"><stop offset="0" stop-color="#f5efe5"/><stop offset="1" stop-color="#ddd0b9"/></radialGradient><radialGradient id="bcquarter" cx=".4" cy=".3" r=".95"><stop offset="0" stop-color="#f2b866"/><stop offset=".5" stop-color="#cf7329"/><stop offset="1" stop-color="#8d4010"/></radialGradient><radialGradient id="hfquarter"><stop offset="0" stop-color="#fff" stop-opacity=".0"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><radialGradient id="hcquarter"><stop offset="0" stop-color="#ffe2a8" stop-opacity=".75"/><stop offset="1" stop-color="#ffe2a8" stop-opacity="0"/></radialGradient><clipPath id="cquarter"><rect x="0" y="72" width="60" height="52"/></clipPath></defs><ellipse cx="60" cy="116" rx="40" ry="4" fill="#000" opacity=".08"/><g fill="url(#bfquarter)" stroke="#c8b99f" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round">  <g><path d="M33 36 C21 40 16 56 22 70 C27 66 34 62 39 52 C42 45 39 38 33 36 Z"/></g><g transform="translate(120 0) scale(-1 1)"><g><path d="M33 36 C21 40 16 56 22 70 C27 66 34 62 39 52 C42 45 39 38 33 36 Z"/></g></g><g><path d="M30 88 C25 96 25 102 27 107 L34 106 C36 101 41 95 44 88 Z"/>      <ellipse cx="37" cy="83" rx="14" ry="10.5" transform="rotate(-22 37 83)"/>      <path d="M27 107 L25 112" fill="none" stroke-width="4.4"/>      <circle cx="23.6" cy="113.4" r="2.9"/><circle cx="28.6" cy="113.4" r="2.9"/></g><g transform="translate(120 0) scale(-1 1)"><g><path d="M30 88 C25 96 25 102 27 107 L34 106 C36 101 41 95 44 88 Z"/>      <ellipse cx="37" cy="83" rx="14" ry="10.5" transform="rotate(-22 37 83)"/>      <path d="M27 107 L25 112" fill="none" stroke-width="4.4"/>      <circle cx="23.6" cy="113.4" r="2.9"/><circle cx="28.6" cy="113.4" r="2.9"/></g></g>  <ellipse cx="60" cy="57" rx="29" ry="38"/></g><g fill="none" stroke="#c8b99f" stroke-width="0.84" stroke-linecap="round" opacity=".55">  <path d="M60 22 C57 40 57 70 60 90"/><path d="M60 22 C63 40 63 70 60 90"/></g><g fill="url(#hfquarter)" opacity=".9"><ellipse cx="47" cy="40" rx="9" ry="16" transform="rotate(14 47 40)"/></g><g fill="#c8b99f" opacity=".28"><circle cx="45" cy="62" r="1.5"/><circle cx="52" cy="72" r="1.4"/><circle cx="42" cy="52" r="1.3"/><circle cx="75" cy="60" r="1.5"/><circle cx="69" cy="72" r="1.4"/><circle cx="78" cy="50" r="1.3"/><circle cx="50" cy="82" r="1.3"/><circle cx="70" cy="82" r="1.3"/></g><g clip-path="url(#cquarter)"><g fill="url(#bcquarter)" stroke="#6e2f0c" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">  <g><path d="M33 36 C21 40 16 56 22 70 C27 66 34 62 39 52 C42 45 39 38 33 36 Z"/></g><g transform="translate(120 0) scale(-1 1)"><g><path d="M33 36 C21 40 16 56 22 70 C27 66 34 62 39 52 C42 45 39 38 33 36 Z"/></g></g><g><path d="M30 88 C25 96 25 102 27 107 L34 106 C36 101 41 95 44 88 Z"/>      <ellipse cx="37" cy="83" rx="14" ry="10.5" transform="rotate(-22 37 83)"/>      <path d="M27 107 L25 112" fill="none" stroke-width="4.4"/>      <circle cx="23.6" cy="113.4" r="2.9"/><circle cx="28.6" cy="113.4" r="2.9"/></g><g transform="translate(120 0) scale(-1 1)"><g><path d="M30 88 C25 96 25 102 27 107 L34 106 C36 101 41 95 44 88 Z"/>      <ellipse cx="37" cy="83" rx="14" ry="10.5" transform="rotate(-22 37 83)"/>      <path d="M27 107 L25 112" fill="none" stroke-width="4.4"/>      <circle cx="23.6" cy="113.4" r="2.9"/><circle cx="28.6" cy="113.4" r="2.9"/></g></g>  <ellipse cx="60" cy="57" rx="29" ry="38"/></g><g fill="none" stroke="#6e2f0c" stroke-width="1.0499999999999998" stroke-linecap="round" opacity=".55">  <path d="M60 22 C57 40 57 70 60 90"/><path d="M60 22 C63 40 63 70 60 90"/></g><g fill="url(#hcquarter)" opacity=".9"><ellipse cx="47" cy="40" rx="9" ry="16" transform="rotate(14 47 40)"/></g><g fill="#6e2f0c" opacity=".28"><circle cx="45" cy="62" r="1.5"/><circle cx="52" cy="72" r="1.4"/><circle cx="42" cy="52" r="1.3"/><circle cx="75" cy="60" r="1.5"/><circle cx="69" cy="72" r="1.4"/><circle cx="78" cy="50" r="1.3"/><circle cx="50" cy="82" r="1.3"/><circle cx="70" cy="82" r="1.3"/></g></g><g stroke="#6e2f0c" stroke-width="1" stroke-dasharray="3 3" fill="none" opacity=".75"><line x1="60" y1="6" x2="60" y2="119"/><line x1="14" y1="72" x2="106" y2="72"/></g></svg>`}
+  ];
+  function ico(inner, fillish){ return '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">' + inner + '</svg>'; }
+  var IC = {
+    none: ico('<circle cx="24" cy="24" r="17"/><path d="M12 36L36 12"/>'),
+    some: ico('<rect x="8" y="10" width="32" height="30" rx="4"/><path d="M8 20h32M16 6v8M32 6v8"/><circle cx="18" cy="30" r="2.4" fill="currentColor" stroke="none"/>'),
+    daily: ico('<rect x="8" y="10" width="32" height="30" rx="4"/><path d="M8 20h32M16 6v8M32 6v8"/><path d="M17 30l5 5 10-11"/>'),
+    bad: ico('<circle cx="24" cy="24" r="17"/><circle cx="18" cy="20" r="1.8" fill="currentColor" stroke="none"/><circle cx="30" cy="20" r="1.8" fill="currentColor" stroke="none"/><path d="M17 34q7-7 14 0"/>'),
+    mid: ico('<circle cx="24" cy="24" r="17"/><circle cx="18" cy="20" r="1.8" fill="currentColor" stroke="none"/><circle cx="30" cy="20" r="1.8" fill="currentColor" stroke="none"/><path d="M17 31h14"/>'),
+    good: ico('<circle cx="24" cy="24" r="17"/><circle cx="18" cy="20" r="1.8" fill="currentColor" stroke="none"/><circle cx="30" cy="20" r="1.8" fill="currentColor" stroke="none"/><path d="M17 28q7 8 14 0"/>'),
+    s1: ico('<rect x="9" y="28" width="8" height="12" rx="1.5" fill="currentColor"/><rect x="20" y="20" width="8" height="20" rx="1.5" opacity=".25"/><rect x="31" y="10" width="8" height="30" rx="1.5" opacity=".25"/>'),
+    s2: ico('<rect x="9" y="28" width="8" height="12" rx="1.5" fill="currentColor"/><rect x="20" y="20" width="8" height="20" rx="1.5" fill="currentColor"/><rect x="31" y="10" width="8" height="30" rx="1.5" opacity=".25"/>'),
+    s3: ico('<rect x="9" y="28" width="8" height="12" rx="1.5" fill="currentColor"/><rect x="20" y="20" width="8" height="20" rx="1.5" fill="currentColor"/><rect x="31" y="10" width="8" height="30" rx="1.5" fill="currentColor"/>')
+  };
+  var NEED = [
+    {v:"لا أحتاج", i:IC.none, d:"لا أحتاجها", c:"bad", say:"لا أحتاج هذه الوجبة"},
+    {v:"أحيانًا", i:IC.some, d:"من وقت لآخر", c:"mid", say:"أحتاجها أحيانًا فقط"},
+    {v:"أحتاج كل يوم", i:IC.daily, d:"بشكل يومي", c:"good", say:"أحتاجها كل يوم"}
+  ];
+  var RATE = [
+    {v:"سيء", i:IC.bad, c:"bad", say:"انطباعك: سيء. غير راضٍ"},
+    {v:"محايد", i:IC.mid, c:"mid", say:"انطباعك: محايد. لا بأس به"},
+    {v:"ممتاز", i:IC.good, c:"good", say:"انطباعك: ممتاز. راضٍ تمامًا"}
+  ];
+  var SIZES = [
+    {v:"صغير", i:IC.s1},
+    {v:"مناسب", i:IC.s2},
+    {v:"كبير", i:IC.s3}
+  ];
+  var GROUPS = [
+    {title:"السندويتشات", items:["دجاج","حلومي","جبن أبيض","تونة"]},
+    {title:"السناك الإضافي", items:["كرواسون","ميني بيتزا","مفن","ميني تارت","كوكيز"]},
+    {title:"المشروبات والسلطة", items:["عصير","ماء","سلطة فواكه"]}
+  ];
+
+  var state = {meal:null, need:null, overall:null, items:{}, notes:""};
+  var $ = function(id){return document.getElementById(id)};
+  var dbRef = null;
+
+  function find(arr, v){ for(var i=0;i<arr.length;i++){ if(arr[i].v===v) return arr[i]; } return null; }
+
+  function tiles(host, opts, get, set, big, onChange){
+    host.innerHTML = "";
+    opts.forEach(function(o){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "tile " + (o.c||"") + (big?" big":"");
+      b.setAttribute("aria-pressed","false"); b.setAttribute("data-v", o.v);
+      var em = document.createElement("span"); em.className="ic"; em.innerHTML=o.i;
+      var tt = document.createElement("span"); tt.className="tt"; tt.textContent=o.v;
+      b.appendChild(em); b.appendChild(tt);
+      if(o.d){ var ds = document.createElement("span"); ds.className="ds"; ds.textContent=o.d; b.appendChild(ds); }
+      b.addEventListener("click", function(){
+        set(get()===o.v ? null : o.v); paint(); if(onChange) onChange();
+      });
+      host.appendChild(b);
+    });
+    function paint(){
+      Array.prototype.forEach.call(host.children, function(b){
+        b.setAttribute("aria-pressed", String(b.getAttribute("data-v")===get()));
+      });
+    }
+    paint();
+  }
+
+  function verdict(el, arr, val, fallback){
+    var o = val ? find(arr, val) : null;
+    el.className = "verdict" + (o ? " " + o.c : "");
+    el.textContent = o ? o.say : fallback;
+  }
+
+  tiles($("mealTiles"), MEALS, function(){return state.meal}, function(v){state.meal=v}, false);
+  tiles($("needTiles"), NEED, function(){return state.need}, function(v){state.need=v}, false, function(){
+    verdict($("needVerdict"), NEED, state.need, "لم تختر بعد");
+  });
+  tiles($("overallTiles"), RATE, function(){return state.overall}, function(v){state.overall=v}, true, function(){
+    verdict($("overallVerdict"), RATE, state.overall, "لم تختر بعد");
+  });
+
+  function miniRow(opts, get, set, cls, after){
+    var row = document.createElement("div"); row.className = "mini " + (cls||"");
+    opts.forEach(function(o){
+      var b = document.createElement("button"); b.type="button"; b.className = o.c||"";
+      b.setAttribute("aria-pressed","false"); b.setAttribute("data-v", o.v);
+      var e = document.createElement("span"); e.className="e"; e.innerHTML=o.i;
+      b.appendChild(e); b.appendChild(document.createTextNode(o.v));
+      b.addEventListener("click", function(){ set(get()===o.v ? null : o.v); paint(); after(); });
+      row.appendChild(b);
+    });
+    function paint(){
+      Array.prototype.forEach.call(row.children, function(b){ b.setAttribute("aria-pressed", String(b.getAttribute("data-v")===get())); });
+    }
+    return row;
+  }
+
+  function updateCount(){
+    var n = 0;
+    Object.keys(state.items).forEach(function(k){ if(state.items[k].quality || state.items[k].size) n++; });
+    $("cnt").textContent = n ? ("قيّمت " + n + " من " + Object.keys(state.items).length) : "لم تقيّم أي صنف بعد";
+  }
+
+  var host = $("itemsHost");
+  GROUPS.forEach(function(g){
+    var t = document.createElement("div"); t.className="gt"; t.textContent=g.title; host.appendChild(t);
+    g.items.forEach(function(name){
+      state.items[name] = {size:null, quality:null};
+      var el = document.createElement("div"); el.className="item";
+      var top = document.createElement("div"); top.className="top";
+      var nm = document.createElement("span"); nm.className="nm"; nm.textContent=name;
+      var st = document.createElement("span"); st.className="st"; st.textContent="لم يُقيَّم";
+      top.appendChild(nm); top.appendChild(st); el.appendChild(top);
+      function refresh(){
+        var it = state.items[name];
+        el.classList.toggle("rated", !!(it.quality||it.size));
+        st.textContent = (it.quality||it.size) ? "تم ✓" : "لم يُقيَّم";
+        updateCount();
+      }
+      var l1 = document.createElement("div"); l1.className="lbl"; l1.textContent="الجودة"; el.appendChild(l1);
+      el.appendChild(miniRow(RATE, function(){return state.items[name].quality}, function(v){state.items[name].quality=v}, "", refresh));
+      var l2 = document.createElement("div"); l2.className="lbl"; l2.textContent="الحجم"; el.appendChild(l2);
+      el.appendChild(miniRow(SIZES, function(){return state.items[name].size}, function(v){state.items[name].size=v}, "size", refresh));
+      host.appendChild(el);
+    });
+  });
+
+  function go(page){
+    $("page1").hidden = page!==1; $("page2").hidden = page!==2; $("doneView").hidden = page!==3;
+    $("s1").className = "step " + (page===1 ? "on" : "done");
+    $("s2").className = "step " + (page===2 ? "on" : "");
+    $("bar").className = "bar" + (page>=2 ? " on" : "");
+    $("steps").hidden = page===3;
+    window.scrollTo(0,0);
+  }
+  $("next").addEventListener("click", function(){
+    if(!state.meal){ $("err1").textContent="اختر نصف دجاجة أو ربع دجاجة."; return; }
+    if(!state.need){ $("err1").textContent="اختر مدى حاجتك للوجبة."; return; }
+    $("err1").textContent=""; go(2);
+  });
+  $("back").addEventListener("click", function(){ go(1); });
+
+  function buildSummary(){
+    var ov = find(RATE, state.overall), nd = find(NEED, state.need);
+    var L = ["استبانة التقييم والرضا","",
+      "الوجبة القادمة: كبسة دجاج (" + state.meal + ")",
+      "مدى الاحتياج: " + nd.v, "",
+      "الانطباع العام: " + ov.v, "", "تفصيل الأصناف:"];
+    var any = false;
+    Object.keys(state.items).forEach(function(k){
+      var it = state.items[k]; if(!it.size && !it.quality) return; any = true;
+      L.push("- " + k + " | الجودة: " + (it.quality||"لم تُحدَّد") + " | الحجم: " + (it.size||"لم يُحدَّد"));
+    });
+    if(!any) L.push("لم يقيّم أصنافًا بعينها");
+    if(state.notes){ L.push(""); L.push("ملاحظات: " + state.notes); }
+    return L.join("\n");
+  }
+
+  function showSend(){
+    var s = buildSummary();
+    $("summary").textContent = s;
+    $("waBtn").href = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(s);
+  }
+  $("copyBtn").addEventListener("click", function(){
+    try{ navigator.clipboard.writeText($("summary").textContent).then(function(){ $("copyBtn").textContent="تم النسخ ✓"; }, function(){ $("copyBtn").textContent="انسخ النص يدويًا"; }); }
+    catch(e){ $("copyBtn").textContent="انسخ النص يدويًا"; }
+  });
+
+  $("submit").addEventListener("click", function(){
+    if(!state.overall){ $("err2").textContent="اختر انطباعك العام: سيء أو محايد أو ممتاز."; $("overallTiles").scrollIntoView({block:"center"}); return; }
+    $("err2").textContent="";
+    state.notes = $("notes").value.trim();
+    var btn = $("submit"); btn.disabled = true; btn.textContent = "جارٍ الإرسال...";
+    var items = {};
+    Object.keys(state.items).forEach(function(k){
+      var it = state.items[k]; if(it.size || it.quality) items[k] = {size: it.size, quality: it.quality};
+    });
+    var payload = {at:new Date().toISOString(), meal:state.meal, need:state.need, overall:state.overall, items:items, notes:state.notes};
+    var id = "r" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+    var ok = Promise.resolve(false);
+    if(dbRef){ ok = dbRef.doc("responses/" + id).set(payload).then(function(){return true}, function(){return false}); }
+    ok.then(function(){ showSend(); go(3); });
+  });
+
+  // ===== النتائج =====
+  function pct(n, t){ return t ? Math.round(n*100/t) : 0; }
+  function distBar(title, vals, extra){
+    var d = document.createElement("div"); d.className="dist";
+    var c = {"سيء":0,"محايد":0,"ممتاز":0}; vals.forEach(function(v){ if(c[v]!==undefined) c[v]++; });
+    var t = vals.length;
+    var h = document.createElement("div"); h.className="h";
+    var a = document.createElement("div"); a.textContent = title;
+    var s = document.createElement("span"); s.textContent = t ? ("الرضا " + pct(c["ممتاز"],t) + "% • " + t + " تقييم" + (extra?" • "+extra:"")) : "لا تقييمات";
+    h.appendChild(a); h.appendChild(s); d.appendChild(h);
+    var st = document.createElement("div"); st.className="stack";
+    [["b","سيء"],["m","محايد"],["g","ممتاز"]].forEach(function(p){
+      var i = document.createElement("i"); i.className=p[0]; i.style.width = pct(c[p[1]],t) + "%"; st.appendChild(i);
+    });
+    d.appendChild(st);
+    var lg = document.createElement("div"); lg.className="leg";
+    lg.textContent = "سيء: " + c["سيء"] + "    محايد: " + c["محايد"] + "    ممتاز: " + c["ممتاز"];
+    d.appendChild(lg);
+    return d;
+  }
+  function showResults(){
+    $("surveyView").hidden = true; $("resultsView").hidden = false;
+    $("tabSurvey").setAttribute("aria-pressed","false"); $("tabResults").setAttribute("aria-pressed","true");
+    if(!dbRef){ $("resSub").textContent="تعذّر الوصول إلى البيانات."; return; }
+    dbRef.collection("responses").get().then(function(snap){
+      var rows = snap.docs.map(function(d){return d.data()});
+      $("resSub").textContent = rows.length ? "" : "لا توجد ردود محفوظة بعد.";
+      var body = $("resBody"); body.innerHTML = "";
+      if(!rows.length) return;
+      var good = rows.filter(function(r){return r.overall==="ممتاز"}).length;
+      var daily = rows.filter(function(r){return r.need==="أحتاج كل يوم"}).length;
+      var kpi = document.createElement("div"); kpi.className="kpi";
+      [["عدد الردود", rows.length],["نسبة الرضا", pct(good,rows.length)+"%"],["يحتاجها يوميًا", pct(daily,rows.length)+"%"]].forEach(function(p){
+        var d = document.createElement("div"); var b = document.createElement("b"); b.textContent=p[1]; d.appendChild(b); d.appendChild(document.createTextNode(p[0])); kpi.appendChild(d);
+      });
+      body.appendChild(kpi);
+
+      var c1 = document.createElement("div"); c1.className="card";
+      var h1 = document.createElement("h2"); h1.textContent="الوجبة القادمة والاحتياج"; c1.appendChild(h1);
+      var m = {}; rows.forEach(function(r){ m[r.meal]=(m[r.meal]||0)+1; });
+      var n = {}; rows.forEach(function(r){ n[r.need]=(n[r.need]||0)+1; });
+      var p1 = document.createElement("p");
+      p1.textContent = "نصف دجاجة: " + (m["نصف دجاجة"]||0) + "  |  ربع دجاجة: " + (m["ربع دجاجة"]||0) + "\nلا أحتاج: " + (n["لا أحتاج"]||0) + "  |  أحيانًا: " + (n["أحيانًا"]||0) + "  |  كل يوم: " + (n["أحتاج كل يوم"]||0);
+      p1.style.whiteSpace="pre-line"; c1.appendChild(p1); body.appendChild(c1);
+
+      var c2 = document.createElement("div"); c2.className="card";
+      var h2 = document.createElement("h2"); h2.textContent="الانطباع العام"; c2.appendChild(h2);
+      c2.appendChild(distBar("كل الوجبة", rows.map(function(r){return r.overall})));
+      body.appendChild(c2);
+
+      var c3 = document.createElement("div"); c3.className="card";
+      var h3 = document.createElement("h2"); h3.textContent="جودة كل صنف"; c3.appendChild(h3);
+      GROUPS.forEach(function(g){ g.items.forEach(function(name){
+        var q=[], sz={"صغير":0,"مناسب":0,"كبير":0};
+        rows.forEach(function(r){ var it=r.items && r.items[name]; if(!it) return; if(it.quality) q.push(it.quality); if(it.size) sz[it.size]++; });
+        var big = sz["كبير"], small = sz["صغير"];
+        var tip = (small>big && small>sz["مناسب"]) ? "الحجم صغير" : (big>small && big>sz["مناسب"]) ? "الحجم كبير" : "";
+        c3.appendChild(distBar(name, q, tip));
+      });});
+      body.appendChild(c3);
+
+      var withNotes = rows.filter(function(r){return r.notes}).sort(function(a,b){return a.at<b.at?1:-1});
+      var c4 = document.createElement("div"); c4.className="card";
+      var h4 = document.createElement("h2"); h4.textContent="الملاحظات"; c4.appendChild(h4);
+      if(!withNotes.length){ var e=document.createElement("p"); e.className="hint"; e.textContent="لا توجد ملاحظات."; c4.appendChild(e); }
+      else { var ul=document.createElement("ul"); ul.className="notes-list"; withNotes.forEach(function(r){ var li=document.createElement("li"); li.textContent=r.notes; ul.appendChild(li); }); c4.appendChild(ul); }
+      body.appendChild(c4);
+    }, function(){ $("resSub").textContent="تعذّر تحميل النتائج."; });
+  }
+  $("tabSurvey").addEventListener("click", function(){
+    $("surveyView").hidden=false; $("resultsView").hidden=true;
+    $("tabSurvey").setAttribute("aria-pressed","true"); $("tabResults").setAttribute("aria-pressed","false");
+  });
+  $("tabResults").addEventListener("click", showResults);
+
+})();
+</script>
+</body>
+</html>
